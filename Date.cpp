@@ -1,5 +1,6 @@
 #include "Date.h"
 #include<iostream>
+#include<fstream>
 using namespace std;
 
 Date::Date() {
@@ -71,6 +72,32 @@ bool Date::operator<=(const Date& other) {
 	return !(this > &other);
 }
 
+
 void Date::printDate() {
 	cout << day << "-" << month << "-" << year;
+}
+
+void Date::putInFile(const char* fileName) {
+	ofstream file(fileName);
+	file.write((const char*)&day, sizeof(size_t));
+	file.write((const char*)&month, sizeof(size_t));
+	file.write((const char*)&year, sizeof(size_t));
+	file.close();
+}
+void Date::readFromFile(const char* fileName) {
+	Date temp;
+	ifstream file(fileName);
+	file.read((char*)&temp.day, sizeof(size_t));
+	file.read((char*)&temp.month, sizeof(size_t));
+	file.read((char*)&temp.year, sizeof(size_t));
+	setYear(temp.getYear());
+	setMonth(temp.getMonth());
+	setDay(temp.getDay());
+	
+	file.close();
+}
+
+ostream& operator<<(ostream& out, const Date& date) {
+	out << date.getDay() << "." << date.getMonth() << "." << date.getYear();
+	return out;
 }

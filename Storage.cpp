@@ -1,4 +1,10 @@
 #include "Storage.h"
+#include<iostream>
+#include<fstream>
+using namespace std;
+//defining just example capacities for the storage
+#define shelfCapacity 20
+#define sectionCapacity 10
 
 
 void Storage::resize() {
@@ -24,6 +30,7 @@ void Storage::freeMemory() {
 }
 
 Storage::Storage() {
+	capacity = 10;
 	storedProducts = new Product[capacity];
 	size = 0;
 }
@@ -41,3 +48,41 @@ Storage::~Storage() {
 	freeMemory();
 }
 
+
+void Storage::putInFile(const char* fileName) {
+	ofstream file(fileName);
+	for (size_t i = 0; i < size; i++) {
+		storedProducts[i].putInFile(fileName);
+	}
+	file.close();
+}
+void Storage::readFromFile(const char* fileName) {
+	ifstream file(fileName);
+	for (size_t i = 0; i < size; i++) {
+		storedProducts[i].readFromFile(fileName);
+	}
+	file.close();
+}
+
+//functions for the interface
+
+void Storage::printStorage() {
+	for (size_t i = 0; i < size; i++) {
+		cout << storedProducts[i];
+	}
+}
+void Storage::addProduct() {
+	if (size == capacity) resize();
+	storedProducts[size];
+
+	size++;
+}
+void Storage::removeProduct() {
+
+}
+void Storage::checkStock() {
+
+}
+void Storage::cleanUp() {
+
+}

@@ -1,5 +1,8 @@
+#include<iostream>
+using namespace std;
 #ifndef __DATE_H
 #define __DATE_H
+
 
 class Date {
 private:
@@ -22,6 +25,10 @@ public:
 	bool operator<=(const Date&);
 	void printDate();
 
+	void putInFile(const char* );
+	void readFromFile(const char* );
+
+	friend ostream& operator<<(ostream&, const Date&);
 
 
 };
