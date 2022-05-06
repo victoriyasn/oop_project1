@@ -29,6 +29,9 @@ public:
 	void readFromFile(const char* );
 
 	friend ostream& operator<<(ostream&, const Date&);
+	friend istream& operator>>(istream&, Date&);
+
+
 
 
 };

@@ -42,3 +42,32 @@ Modification& Modification::operator=(const Modification& other) {
 Modification::~Modification() {
 	freeMemory();
 }
+
+Date Modification::getModifDate() const {
+	return modifDate;
+}
+char* Modification::getProduct() const {
+	return product;
+}
+size_t Modification::getQuantity() const {
+	return quantity;
+}
+bool Modification::getInOrOut() const {
+	return inOrOut;
+}
+
+void Modification::setModifDate(const Date& newDate) {
+	modifDate.setYear(newDate.getYear());
+	modifDate.setMonth(newDate.getMonth());
+	modifDate.setDay(newDate.getDay());
+}
+void Modification::setProduct(const char* newProduct) {
+	product = new char[strlen(newProduct) + 1];
+	strcpy_s(product, strlen(newProduct) + 1, newProduct);
+}
+void Modification::setQuantity(const size_t newQuantity) {
+	quantity = newQuantity;
+}
+void Modification::setInOrOut(const bool newBool) {
+	inOrOut = newBool;
+}

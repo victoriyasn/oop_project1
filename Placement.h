@@ -22,6 +22,7 @@ public :
 	bool operator==(const Placement&)const;
 	bool operator!=(const Placement&)const;
 	friend ostream& operator<<(ostream&, const Placement&);
+	friend istream& operator>>(istream&, Placement&);
 
 	void putInFile(const char*);
 	void readFromFile(const char*);

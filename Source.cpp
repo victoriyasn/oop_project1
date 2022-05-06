@@ -6,8 +6,22 @@ using namespace std;
 
 int main() {
 	Storage test;
+//	test.addProduct();
+/*		Date testDate;
+	Date testDate2;
+	testDate.setYear(2002);
+	testDate.setMonth(3);
+	testDate.setDay(2);
 
-
+	testDate2.setYear(2002);
+	testDate2.setMonth(3);
+	testDate2.setDay(3);
+	cout << (testDate >= testDate2); */
+	//test.addProduct();
+//	test.addProduct();
+//	test.checkStock();
+//	test.cleanUp();
+//	test.printStorage();
 
 }
 

@@ -15,5 +15,15 @@ public:
 	Modification(const Modification&);
 	Modification& operator=(const Modification&);
 	~Modification();
+
+	Date getModifDate() const;
+	char* getProduct() const;
+	size_t getQuantity() const;
+	bool getInOrOut() const;
+
+	void setModifDate(const Date&);
+	void setProduct(const char*);
+	void setQuantity(const size_t);
+	void setInOrOut(const bool);
 };
 #endif

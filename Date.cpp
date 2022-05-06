@@ -1,6 +1,7 @@
 #include "Date.h"
 #include<iostream>
 #include<fstream>
+#include<cstring>
 using namespace std;
 
 Date::Date() {
@@ -65,11 +66,21 @@ bool Date::operator<(const Date& other) {
 	else if (day < other.day) return true;
 	else return false;
 }
+
+
+//gotta fix those
 bool Date::operator>=(const Date& other) {
-	return !(this < &other);
+	if (!(year > other.year)) return false;
+	else if (!(month > other.month)) return false;
+	else if (!(day < other.day)) return true;
+	else return false;
+	
 }
 bool Date::operator<=(const Date& other) {
-	return !(this > &other);
+	if (!(year < other.year)) return false;
+	else if (!(month < other.month)) return false;
+	else if (!(day > other.day)) return true;
+	else return false;
 }
 
 
@@ -101,3 +112,18 @@ ostream& operator<<(ostream& out, const Date& date) {
 	out << date.getDay() << "." << date.getMonth() << "." << date.getYear();
 	return out;
 }
+
+istream& operator>>(istream& in, Date& date) {
+	Date temp;
+	in >> temp.day;
+	in >> temp.month;
+	in >> temp.year;
+
+	
+	date.setYear(temp.getYear());
+	date.setMonth(temp.getMonth());
+	date.setDay(temp.getDay());
+
+	return in;
+}
+

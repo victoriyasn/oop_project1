@@ -6,7 +6,6 @@ using namespace std;
 Placement::Placement() {
 	sectionNum = 0;
 	shelfNum = 0;
-
 	productNum = 0;
 }
 void Placement::setSectionNum(const size_t newSect) {
@@ -43,6 +42,13 @@ ostream& operator<<(ostream& out, const Placement& place) {
 
 	out << "Product Num." << place.getProductNum() << endl;
 	return out;
+}
+
+istream& operator>>(istream& in, Placement& place) {
+	in >> place.sectionNum;
+	in >> place.shelfNum;
+	in >> place.productNum;
+	return in;
 }
 
 void Placement::putInFile(const char* fileName) {

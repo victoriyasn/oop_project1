@@ -9,7 +9,8 @@ private:
 	Product* storedProducts;
 	size_t size;
 	size_t capacity;
-	Modification array[240];
+	Modification modifications[240];
+	size_t modifSize;
 	void resize();
 	void copyFrom(const Storage&);
 	void freeMemory();
