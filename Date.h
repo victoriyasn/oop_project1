@@ -25,8 +25,8 @@ public:
 	bool operator<=(const Date&);
 	void printDate();
 
-	void putInFile(const char* );
-	void readFromFile(const char* );
+	void putInFile(ofstream& );
+	void readFromFile(ifstream& );
 
 	friend ostream& operator<<(ostream&, const Date&);
 	friend istream& operator>>(istream&, Date&);

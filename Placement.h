@@ -11,9 +11,9 @@ private :
 	size_t productNum;
 public :
 	Placement();
+	Placement(size_t, size_t, size_t);
 	void setSectionNum(const size_t);
 	void setShelfNum(const size_t);
-
 	void setProductNum(const size_t);
 	size_t getSectionNum() const;
 	size_t getShelfNum() const;
@@ -24,8 +24,8 @@ public :
 	friend ostream& operator<<(ostream&, const Placement&);
 	friend istream& operator>>(istream&, Placement&);
 
-	void putInFile(const char*);
-	void readFromFile(const char*);
+	void putInFile(ofstream&);
+	void readFromFile(ifstream&);
 
 
 };

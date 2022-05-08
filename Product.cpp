@@ -146,7 +146,6 @@ ostream& operator<<(ostream& out, const Product& product) {
 	out << endl;
 	out << "Placement: ";
 	out << product.getPlacement();
-	out << endl;
 	out << "Comment: ";
 	out << product.getComment();
 	out << endl;
@@ -154,52 +153,54 @@ ostream& operator<<(ostream& out, const Product& product) {
 	return out;
 }
 
-void Product::putInFile(const char* fileName) {
-	ofstream file(fileName);
+
+//gotta fix those
+void Product::putInFile(ofstream& out) {
+
 	size_t writeSize;
 	writeSize = strlen(productName) + 1;
-	file.write((const char*)&writeSize, sizeof(size_t));
-	file.write((const char*)&productName, writeSize);
+	out.write((const char*)&writeSize, sizeof(size_t));
+	out.write((const char*)&productName, writeSize);
 
-	expireDate.putInFile(fileName);
-	entryDate.putInFile(fileName);
+	expireDate.putInFile(out);
+	entryDate.putInFile(out);
 
 	writeSize = strlen(madeBy) + 1;
-	file.write((const char*)&writeSize, sizeof(size_t));
-	file.write((const char*)&madeBy, writeSize);
+	out.write((const char*)&writeSize, sizeof(size_t));
+	out.write((const char*)&madeBy, writeSize);
 
-	file.write((const char*)&quantity, sizeof(quantity));
+	out.write((const char*)&quantity, sizeof(quantity));
 
-	placeInShop.putInFile(fileName);
+	placeInShop.putInFile(out);
 
 	writeSize = strlen(comment) + 1;
-	file.write((const char*)&writeSize, sizeof(size_t));
-	file.write((const char*)&comment, writeSize );
+	out.write((const char*)&writeSize, sizeof(size_t));
+	out.write((const char*)&comment, writeSize );
 
-	file.close();
+	
 }
-void Product::readFromFile(const char* fileName) {
-	ifstream file(fileName);
+void Product::readFromFile(ifstream& in) {
+	
 	Product temp;
 
 	size_t readSize;
-	file.read((char*)&readSize, sizeof(size_t));
-	file.read((char*)&temp.productName, readSize);
+	in.read((char*)&readSize, sizeof(size_t));
+	in.read((char*)&temp.productName, readSize);
 
-	temp.expireDate.readFromFile(fileName);
-	temp.entryDate.readFromFile(fileName);
+	temp.expireDate.readFromFile(in);
+	temp.entryDate.readFromFile(in);
 	
-	file.read((char*)&readSize, sizeof(size_t));
-	file.read((char*)&temp.madeBy, readSize);
+	in.read((char*)&readSize, sizeof(size_t));
+	in.read((char*)&temp.madeBy, readSize);
 	
-	file.read((char*)&temp.quantity, sizeof(size_t));
+	in.read((char*)&temp.quantity, sizeof(size_t));
 
-	temp.placeInShop.readFromFile(fileName);
+	temp.placeInShop.readFromFile(in);
 
-	file.read((char*)&readSize, sizeof(size_t));
-	file.read((char*)&temp.comment, readSize);
+	in.read((char*)&readSize, sizeof(size_t));
+	in.read((char*)&temp.comment, readSize);
 
-	file.close();
+	
 
 	productName = new char[strlen(temp.productName) + 1];
 	strcpy_s(productName, strlen(temp.productName) + 1, temp.productName);

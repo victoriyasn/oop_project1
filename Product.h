@@ -37,8 +37,8 @@ public:
 	void setComment(const char*);
 	friend ostream& operator<<(ostream&, const Product&);
 
-	void putInFile(const char*);
-	void readFromFile(const char*);
+	void putInFile(ofstream&);
+	void readFromFile(ifstream&);
 };
 
 #endif

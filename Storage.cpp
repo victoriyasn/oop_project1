@@ -3,8 +3,10 @@
 #include<fstream>
 using namespace std;
 //defining just example capacities for the storage
+#define onShelfCapacity 20
 #define shelfCapacity 20
 #define sectionCapacity 10
+
 
 
 void Storage::resize() {
@@ -58,19 +60,17 @@ Storage::~Storage() {
 }
 
 
-void Storage::putInFile(const char* fileName) {
-	ofstream file(fileName);
+void Storage::putInFile(ofstream& out) {
 	for (size_t i = 0; i < size; i++) {
-		storedProducts[i].putInFile(fileName);
+		storedProducts[i].putInFile(out);
 	}
-	file.close();
+
 }
-void Storage::readFromFile(const char* fileName) {
-	ifstream file(fileName);
+void Storage::readFromFile(ifstream& in) {
 	for (size_t i = 0; i < size; i++) {
-		storedProducts[i].readFromFile(fileName);
+		storedProducts[i].readFromFile(in);
 	}
-	file.close();
+
 }
 
 //functions for the interface
@@ -78,11 +78,13 @@ void Storage::readFromFile(const char* fileName) {
 void Storage::printStorage() {
 	cout << endl;
 	for (size_t i = 0; i < size; i++) {
-		cout << storedProducts[i];
+		cout << storedProducts[i] << endl;
 	}
 }
+//fix the placement thing
 void Storage::addProduct() {
 	
+
 	if (size == capacity) resize();
 	Product addProduct;
 
@@ -114,11 +116,6 @@ void Storage::addProduct() {
 	addProduct.setQuantity(tempQuantity);
 	modifications[modifSize].setQuantity(tempQuantity);
 
-	Placement tempPlace;
-	cout << "Enter placement: " << endl;
-	cin >> tempPlace;
-	addProduct.setPlaceinShop(tempPlace);
-
 	cout << "Enter comment: " << endl;
 	cin.ignore();
 	cin.getline(temp, 128);
@@ -126,15 +123,96 @@ void Storage::addProduct() {
 
 	modifications[modifSize].setInOrOut(1);
 
+	
+	//we will be placing every new product on the next free spot on the same shelf, so we can just check if theres enough shelves on the section
+	Placement tempPlace(1, 1, 1);
+	
+	//this is in a terrifying state for now
+	/*
+	for (size_t i = 0; i < size; i++) {
+		if (strcmp(storedProducts[i].getProductName(), addProduct.getProductName()) == 0) {
+			if (storedProducts[i].getExpireDate() == addProduct.getExpireDate()) {
+				if (storedProducts[i].getPlacement().getProductNum() < onShelfCapacity) {
+					tempPlace.setProductNum(storedProducts[i].getPlacement().getProductNum() + 1);
+				} else if (storedProducts[i].getPlacement().getShelfNum() < shelfCapacity) {
+					tempPlace.setProductNum(storedProducts[i].getPlacement().getShelfNum() + 1);
+				}
+				else if (storedProducts[i].getPlacement().getSectionNum() < sectionCapacity) {
+					tempPlace.setProductNum(storedProducts[i].getPlacement().getSectionNum() + 1);
+				}
+			}
+
+		}
+	}
+	*/
+	addProduct.setPlaceinShop(tempPlace);
+	
 	storedProducts[size] = addProduct;
 	modifSize++;
 	size++;
 	
-	
 	delete[]temp;
 }
 void Storage::removeProduct() {
+	/*
+		• при наличие на повече от една партида, първо намалява тази
+		със най - скоро изтичащ срок на годност, тогава във изведената
+		информация за извършеното действие се отбелязва
+		количеството и мястото на всяка от партидите, които сме
+		намалили
+		*/
+	char removeProduct[64];
+	size_t quantityRemoved = 0;
+	bool isEmpty = false;
+	size_t index = 0;
+	bool remove;
+	cout << "Please enter the name of the product you want to remove: " << endl;
+	cin.getline(removeProduct, 64);
+	cout << "Please enter the quantity you want to remove: " << endl;
+	cin >> quantityRemoved;
+	for (size_t i = 0; i < size; i++) {
+		if (strcmp(storedProducts[i].getProductName(), removeProduct) == 0) {
+			if (storedProducts[i].getQuantity() >= quantityRemoved) {
+				storedProducts[i].setQuantity(storedProducts[i].getQuantity() - quantityRemoved);
+				cout << storedProducts[i];
+				if (storedProducts[i].getQuantity() == 0) {
+					isEmpty = true;
+					index = i;
+				}
+			}
+			else {
+				cout << "Invalid quantity";
+				cout << storedProducts[i];
+				cout << "Do you want to remove everything left? 1 for yes, 0 for no";
+				cin >> remove;
+				if (remove) {
+					storedProducts[i].setQuantity(0);
+					isEmpty = true;
+					index = i;
+				}
+			}
+		}
+	}
+	
+	
+	if (isEmpty) {
+		Product* newStore;
+		newStore = new Product[capacity];
+		size_t get = 0;
+		for (size_t i = 0; i < size; i++) {
+			if (i != index) {
+			
+				newStore[get] = storedProducts[i];
+				++get;
+			}
 
+		}
+		cout << get;
+		delete[]storedProducts;
+		storedProducts = newStore;
+		size = get;
+	}
+	
 }
 void Storage::checkStock() {
 	Date start;
@@ -145,8 +223,7 @@ void Storage::checkStock() {
 	cin >> end;
 
 	for (size_t i = 0; i < modifSize; i++) {
-		//fix the check
-		if (!(modifications[i].getModifDate() < start && modifications[i].getModifDate() > end)) {
+		if (modifications[i].getModifDate() >= start && modifications[i].getModifDate() > end) {
 			cout << "Product: " << modifications[i].getProduct() << endl;
 			cout << "Modification date: " << modifications[i].getModifDate() << endl;
 			cout << "Change: ";
@@ -159,29 +236,50 @@ void Storage::checkStock() {
 }
 void Storage::cleanUp() {
 	Date cleanDate;
-	Storage newStore;
-	newStore.capacity = capacity;
+	Product* newStore;
+	newStore = new Product[capacity];
 
-	size_t newSize = size;
 	cout << "Please enter clean up date: " << endl;
 	cin >> cleanDate;
 	size_t get = 0;
 	for (size_t i = 0; i < size; i++) {
 		if (storedProducts[i].getExpireDate() > cleanDate) {
-			newStore.storedProducts[i] = storedProducts[get];
+			newStore[get] = storedProducts[i];
 			++get;
-		}
-		else {
-			newStore.storedProducts[i] = storedProducts[++get];
 		}
 		
 	}
+	cout << get;
 	delete[]storedProducts;
-	storedProducts = newStore.storedProducts;
-	newStore.storedProducts = nullptr;
-	size--;
+	storedProducts = newStore;
+	size = get;
 
-	//gotta make the date into a char*
-	this->putInFile("DateCleanUp");
+	char fileName[23];
+	fileName[0] = '\0';
+	strcat_s(fileName, strlen("cleanup-") + 1, "cleanup-");
+
+	char chYear[5];
+	char chMonth[3];
+	char chDay[3];
+	chYear[0] = '\0';
+	chMonth[0] = '\0';
+	chDay[0] = '\0';
+	_itoa_s(cleanDate.getYear(), chYear, 10);
+	_itoa_s(cleanDate.getMonth(), chMonth, 10);
+	_itoa_s(cleanDate.getDay(), chDay, 10);
+	strcat_s(fileName, sizeof(fileName), "2002");
+	strcat_s(fileName, sizeof(fileName), "-");
+	strcat_s(fileName, sizeof(fileName), chMonth);
+	strcat_s(fileName, sizeof(fileName), "-");
+	strcat_s(fileName, sizeof(fileName), chDay);
+	strcat_s(fileName, sizeof(fileName), ".txt");
+	
+	ofstream file(fileName);
+	for (size_t i = 0; i < size; i++) {
+		cout << fileName;
+		file << storedProducts[i];
+	}
+
+	file.close();
 
 }

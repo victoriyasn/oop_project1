@@ -55,32 +55,27 @@ bool Date::operator==(const Date& other) {
 	return year == other.year && month == other.month && day == other.day;
 }
 bool Date::operator>(const Date& other) {
+	if (year > other.year) return true;
 	if (year < other.year) return false;
-	else if (month < other.month) return false;
-	else if (day > other.day) return true;
-	else return false;
+	if (month > other.month) return true;
+	if (month < other.month) return false;
+	return day > other.day;
+	
 }
 bool Date::operator<(const Date& other) {
+	if (year < other.year) return true;
 	if (year > other.year) return false;
-	else if (month > other.month) return false;
-	else if (day < other.day) return true;
-	else return false;
+	if (month < other.month) return true;
+	if (month > other.month) return false;
+	return day < other.day;
 }
 
-
-//gotta fix those
 bool Date::operator>=(const Date& other) {
-	if (!(year > other.year)) return false;
-	else if (!(month > other.month)) return false;
-	else if (!(day < other.day)) return true;
-	else return false;
+	return !(*this < other);
 	
 }
 bool Date::operator<=(const Date& other) {
-	if (!(year < other.year)) return false;
-	else if (!(month < other.month)) return false;
-	else if (!(day > other.day)) return true;
-	else return false;
+	return !(*this > other);
 }
 
 
@@ -88,24 +83,11 @@ void Date::printDate() {
 	cout << day << "-" << month << "-" << year;
 }
 
-void Date::putInFile(const char* fileName) {
-	ofstream file(fileName);
-	file.write((const char*)&day, sizeof(size_t));
-	file.write((const char*)&month, sizeof(size_t));
-	file.write((const char*)&year, sizeof(size_t));
-	file.close();
+void Date::putInFile(ofstream& out) {
+	out << day<< " "<< month<< " "<< year << " ";
 }
-void Date::readFromFile(const char* fileName) {
-	Date temp;
-	ifstream file(fileName);
-	file.read((char*)&temp.day, sizeof(size_t));
-	file.read((char*)&temp.month, sizeof(size_t));
-	file.read((char*)&temp.year, sizeof(size_t));
-	setYear(temp.getYear());
-	setMonth(temp.getMonth());
-	setDay(temp.getDay());
-	
-	file.close();
+void Date::readFromFile(ifstream& in) {
+	in >> day >> month >> year;
 }
 
 ostream& operator<<(ostream& out, const Date& date) {

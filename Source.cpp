@@ -6,22 +6,32 @@ using namespace std;
 
 int main() {
 	Storage test;
-//	test.addProduct();
-/*		Date testDate;
-	Date testDate2;
-	testDate.setYear(2002);
-	testDate.setMonth(3);
-	testDate.setDay(2);
-
-	testDate2.setYear(2002);
-	testDate2.setMonth(3);
-	testDate2.setDay(3);
-	cout << (testDate >= testDate2); */
 	//test.addProduct();
-//	test.addProduct();
-//	test.checkStock();
-//	test.cleanUp();
-//	test.printStorage();
+	//test.addProduct();
+	//test.addProduct();
+	//test.checkStock();
+	//test.cleanUp();
+	//test.removeProduct();
+	//test.printStorage();
+	 
+	
+	//file testing code - doesnt work 
+
+/*	ofstream out("Test");
+	Product input;
+	Date testDate(1, 2, 2002);
+	Date testDate2(1, 1, 2002);
+	input.setProductName("TestName");
+	input.setExpireDate(testDate);
+	input.setEntryDate(testDate2);
+	input.setMadeBy("bhewj");
+	input.setQuantity(3);
+	Placement testPlace(1, 1, 1);
+	input.setPlaceinShop(testPlace);
+	input.setComment("fbhweil");
+
+	input.putInFile(out);
+	*/
 
 }
 

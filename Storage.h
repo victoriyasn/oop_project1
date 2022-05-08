@@ -26,8 +26,8 @@ public:
 	void checkStock();
 	void cleanUp();
 	
-	void putInFile(const char*);
-	void readFromFile(const char*);
+	void putInFile(ofstream&);
+	void readFromFile(ifstream&);
 };
 
 #endif
