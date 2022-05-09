@@ -154,31 +154,40 @@ ostream& operator<<(ostream& out, const Product& product) {
 }
 
 
-//gotta fix those
 void Product::putInFile(ofstream& out) {
 
 	size_t writeSize;
 	writeSize = strlen(productName) + 1;
-	out.write((const char*)&writeSize, sizeof(size_t));
-	out.write((const char*)&productName, writeSize);
+	out << writeSize;
+	out << " ";
+
+	out << productName;
+	out << " ";
+
 
 	expireDate.putInFile(out);
 	entryDate.putInFile(out);
 
 	writeSize = strlen(madeBy) + 1;
-	out.write((const char*)&writeSize, sizeof(size_t));
-	out.write((const char*)&madeBy, writeSize);
 
-	out.write((const char*)&quantity, sizeof(quantity));
+	out << writeSize;
+	out << " ";
 
+	out << madeBy;
+	out << " ";
+
+	out << quantity;
+	out << " ";
 	placeInShop.putInFile(out);
 
 	writeSize = strlen(comment) + 1;
-	out.write((const char*)&writeSize, sizeof(size_t));
-	out.write((const char*)&comment, writeSize );
-
+	out << writeSize;
+	out << " ";
+	out << comment;
+	out << " ";
 	
 }
+//gotta fix the read
 void Product::readFromFile(ifstream& in) {
 	
 	Product temp;

@@ -84,7 +84,6 @@ void Storage::printStorage() {
 //fix the placement thing
 void Storage::addProduct() {
 	
-
 	if (size == capacity) resize();
 	Product addProduct;
 
@@ -154,41 +153,55 @@ void Storage::addProduct() {
 	delete[]temp;
 }
 void Storage::removeProduct() {
-	/*
-		• при наличие на повече от една партида, първо намалява тази
-		със най - скоро изтичащ срок на годност, тогава във изведената
-		информация за извършеното действие се отбелязва
-		количеството и мястото на всяка от партидите, които сме
-		намалили
-		*/
+
 	char removeProduct[64];
 	size_t quantityRemoved = 0;
 	bool isEmpty = false;
 	size_t index = 0;
 	bool remove;
+	bool sameProduct = false;
 	cout << "Please enter the name of the product you want to remove: " << endl;
 	cin.getline(removeProduct, 64);
 	cout << "Please enter the quantity you want to remove: " << endl;
 	cin >> quantityRemoved;
+	size_t indExpDate = 0;
+
+//have to fix some stuff
 	for (size_t i = 0; i < size; i++) {
 		if (strcmp(storedProducts[i].getProductName(), removeProduct) == 0) {
-			if (storedProducts[i].getQuantity() >= quantityRemoved) {
-				storedProducts[i].setQuantity(storedProducts[i].getQuantity() - quantityRemoved);
-				cout << storedProducts[i];
-				if (storedProducts[i].getQuantity() == 0) {
-					isEmpty = true;
-					index = i;
+			for (size_t j = i + 1; j < size; j++) {
+				if (strcmp(storedProducts[i].getProductName(), storedProducts[j].getProductName()) == 0) {
+					sameProduct = true;
+					if (storedProducts[i].getExpireDate() > storedProducts[j].getExpireDate()) {
+						i = j;
+						indExpDate = j;
+					}
+					else indExpDate = i;
 				}
 			}
+			if (sameProduct) {
+				storedProducts[indExpDate].setQuantity(storedProducts[i].getQuantity() - quantityRemoved);
+				cout << storedProducts[indExpDate];
+			}
 			else {
-				cout << "Invalid quantity";
-				cout << storedProducts[i];
-				cout << "Do you want to remove everything left? 1 for yes, 0 for no";
-				cin >> remove;
-				if (remove) {
-					storedProducts[i].setQuantity(0);
-					isEmpty = true;
-					index = i;
+				if (storedProducts[i].getQuantity() >= quantityRemoved) {
+					storedProducts[i].setQuantity(storedProducts[i].getQuantity() - quantityRemoved);
+					cout << storedProducts[i];
+					if (storedProducts[i].getQuantity() == 0) {
+						isEmpty = true;
+						index = i;
+					}
+				}
+				else {
+					cout << "Invalid quantity";
+					cout << storedProducts[i];
+					cout << "Do you want to remove everything left? 1 for yes, 0 for no";
+					cin >> remove;
+					if (remove) {
+						storedProducts[i].setQuantity(0);
+						isEmpty = true;
+						index = i;
+					}
 				}
 			}
 		}

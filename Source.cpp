@@ -31,8 +31,15 @@ int main() {
 	input.setComment("fbhweil");
 
 	input.putInFile(out);
-	*/
+	out.close();
+	
+	ifstream in("Test");
+	Product output;
+	output.readFromFile(in);
+	in.close();
+	cout << output;
 
+	*/
 }
 
 //template for the dialog 
