@@ -4,41 +4,8 @@
 #include<fstream>
 using namespace std;
 
-void Product::copyFrom(const Product& other) {
-	productName = new char[strlen(other.productName) + 1];
-	strcpy_s(productName, strlen(other.productName) + 1, other.productName);
-
-	expireDate.setYear(other.expireDate.getYear());
-	expireDate.setMonth(other.expireDate.getMonth());
-	expireDate.setDay(other.expireDate.getDay());
-
-	entryDate.setYear(other.entryDate.getYear());
-	entryDate.setMonth(other.entryDate.getMonth());
-	entryDate.setDay(other.entryDate.getDay());
-
-	madeBy = new char[strlen(other.madeBy) + 1];
-	strcpy_s(madeBy, strlen(other.madeBy) + 1, other.madeBy);
-
-	quantity = other.quantity;
-
-	placeInShop.setSectionNum(other.placeInShop.getSectionNum());
-	placeInShop.setShelfNum(other.placeInShop.getShelfNum());
-	placeInShop.setProductNum(other.placeInShop.getProductNum());
-
-	comment = new char[strlen(other.comment) + 1];
-	strcpy_s(comment, strlen(other.comment) + 1, other.comment);
-
-}
-
-void Product::freeMemory() {
-	delete[]productName;
-	delete[]madeBy;
-	delete[]comment;
-}
-
 Product::Product() {
-	productName = new char[strlen("Unknown") + 1];
-	strcpy_s(productName, strlen("Unknown") + 1, "Unkown");
+	productName.setString("Unknown");
 
 	expireDate.setYear(2001);
 	expireDate.setMonth(1);
@@ -48,8 +15,8 @@ Product::Product() {
 	entryDate.setMonth(1);
 	entryDate.setDay(1);
 
-	madeBy = new char[strlen("Unknown") + 1];
-	strcpy_s(madeBy, strlen("Unknown") + 1, "Unknown");
+	madeBy.setString("Unknown");
+	
 
 	quantity = 1;
 
@@ -57,25 +24,11 @@ Product::Product() {
 	placeInShop.setShelfNum(0);
 	placeInShop.setProductNum(0);
 
-	comment = new char[strlen("None") + 1];
-	strcpy_s(comment, strlen("None") + 1, "None");
+	comment.setString("None");
+
 }
 
-Product::Product(const Product& other) {
-	copyFrom(other);
-}
-Product& Product::operator=(const Product& other) {
-	if (this != &other) {
-		freeMemory();
-		copyFrom(other);
-	}
-	return *this;
-}
-Product::~Product() {
-	freeMemory();
-}
-
-char* Product::getProductName() const {
+MyString Product::getProductName() const {
 	return productName;
 }
 Date Product::getExpireDate() const {
@@ -84,7 +37,7 @@ Date Product::getExpireDate() const {
 Date Product::getEntryDate() const {
 	return entryDate;
 }
-char* Product::getMadeBy() const {
+MyString Product::getMadeBy() const {
 	return madeBy;
 }
 size_t Product::getQuantity() const {
@@ -93,39 +46,36 @@ size_t Product::getQuantity() const {
 Placement Product::getPlacement() const {
 	return placeInShop;
 }
-char* Product::getComment() const {
+MyString Product::getComment() const {
 	return comment;
 }
 
-void Product::setProductName(const char* otherName) {
-	productName = new char[strlen(otherName) + 1];
-	strcpy_s(productName, strlen(otherName) + 1, otherName);
+void Product::setProductName(const MyString& otherName) {
+	productName.setString(otherName.getString());
 }
-void Product::setExpireDate(const Date otherExpDate) {
+void Product::setExpireDate(const Date& otherExpDate) {
 	expireDate.setYear(otherExpDate.getYear());
 	expireDate.setMonth(otherExpDate.getMonth());
 	expireDate.setDay(otherExpDate.getDay());
 }
-void Product::setEntryDate(const Date otherEntDate){
+void Product::setEntryDate(const Date& otherEntDate){
 	entryDate.setYear(otherEntDate.getYear());
 	entryDate.setMonth(otherEntDate.getMonth());
 	entryDate.setDay(otherEntDate.getDay());
 }
-void Product::setMadeBy(const char* otherMadeBy) {
-	madeBy = new char[strlen(otherMadeBy) + 1];
-	strcpy_s(madeBy, strlen(otherMadeBy) + 1, otherMadeBy);
+void Product::setMadeBy(const MyString&  otherMadeBy) {
+	madeBy.setString(otherMadeBy.getString());
 }
-void Product::setQuantity(const size_t otherQuantity) {
+void Product::setQuantity(const size_t& otherQuantity) {
 	quantity = otherQuantity;
 }
-void Product::setPlaceinShop(const Placement otherPlacement) {
+void Product::setPlaceinShop(const Placement& otherPlacement) {
 	placeInShop.setShelfNum(otherPlacement.getShelfNum());
 	placeInShop.setSectionNum(otherPlacement.getSectionNum());
 	placeInShop.setProductNum(otherPlacement.getProductNum());
 }
-void Product::setComment(const char* otherComment) {
-	comment = new char[strlen(otherComment) + 1];
-	strcpy_s(comment, strlen(otherComment) + 1, otherComment);
+void Product::setComment(const MyString& otherComment) {
+	comment.setString(otherComment.getString());
 }
 
 ostream& operator<<(ostream& out, const Product& product) {
@@ -156,76 +106,50 @@ ostream& operator<<(ostream& out, const Product& product) {
 
 void Product::putInFile(ofstream& out) {
 
-	size_t writeSize;
-	writeSize = strlen(productName) + 1;
-	out << writeSize;
-	out << " ";
 
-	out << productName;
-	out << " ";
-
+	productName.putInFile(out);
 
 	expireDate.putInFile(out);
 	entryDate.putInFile(out);
 
-	writeSize = strlen(madeBy) + 1;
-
-	out << writeSize;
-	out << " ";
-
-	out << madeBy;
-	out << " ";
+	madeBy.putInFile(out);
 
 	out << quantity;
 	out << " ";
+
 	placeInShop.putInFile(out);
 
-	writeSize = strlen(comment) + 1;
-	out << writeSize;
-	out << " ";
-	out << comment;
-	out << " ";
+	comment.putInFile(out);
+
 	
 }
 //gotta fix the read
 void Product::readFromFile(ifstream& in) {
-	
 	Product temp;
 
-	size_t readSize;
-	in.read((char*)&readSize, sizeof(size_t));
-	in.read((char*)&temp.productName, readSize);
+//	size_t readSize;
+//	in.read((char*)&readSize, sizeof(size_t));
+//	in.read((char*)&temp.productName, readSize);
 
+	temp.productName.readFromFile(in);
 	temp.expireDate.readFromFile(in);
 	temp.entryDate.readFromFile(in);
-	
-	in.read((char*)&readSize, sizeof(size_t));
-	in.read((char*)&temp.madeBy, readSize);
-	
-	in.read((char*)&temp.quantity, sizeof(size_t));
-
+	temp.madeBy.readFromFile(in);
+	in >> quantity;
 	temp.placeInShop.readFromFile(in);
+	temp.comment.readFromFile(in);
 
-	in.read((char*)&readSize, sizeof(size_t));
-	in.read((char*)&temp.comment, readSize);
 
-	
 
-	productName = new char[strlen(temp.productName) + 1];
-	strcpy_s(productName, strlen(temp.productName) + 1, temp.productName);
-	
+	setProductName(temp.getProductName());
 	setExpireDate(temp.expireDate);
 	setEntryDate(temp.entryDate);
-
-	madeBy = new char[strlen(temp.madeBy) + 1];
-	strcpy_s(madeBy, strlen(temp.madeBy) + 1, temp.madeBy);
+	setMadeBy(temp.getMadeBy());
 
 	quantity = temp.quantity;
 	
 	setPlaceinShop(temp.placeInShop);
-
-	comment = new char[strlen(temp.comment) + 1];
-	strcpy_s(comment, strlen(temp.comment) + 1, temp.comment);
+	setComment(temp.getComment());
 
 
 }

@@ -75,13 +75,14 @@ void Storage::readFromFile(ifstream& in) {
 
 //functions for the interface
 
+
 void Storage::printStorage() {
 	cout << endl;
 	for (size_t i = 0; i < size; i++) {
 		cout << storedProducts[i] << endl;
 	}
+
 }
-//fix the placement thing
 void Storage::addProduct() {
 	
 	if (size == capacity) resize();
@@ -115,6 +116,11 @@ void Storage::addProduct() {
 	addProduct.setQuantity(tempQuantity);
 	modifications[modifSize].setQuantity(tempQuantity);
 
+	Placement tempPlace;
+	cout << "Enter placement:" << endl;
+	cin >> tempPlace;
+	addProduct.setPlaceinShop(tempPlace);
+
 	cout << "Enter comment: " << endl;
 	cin.ignore();
 	cin.getline(temp, 128);
@@ -122,30 +128,6 @@ void Storage::addProduct() {
 
 	modifications[modifSize].setInOrOut(1);
 
-	
-	//we will be placing every new product on the next free spot on the same shelf, so we can just check if theres enough shelves on the section
-	Placement tempPlace(1, 1, 1);
-	
-	//this is in a terrifying state for now
-	/*
-	for (size_t i = 0; i < size; i++) {
-		if (strcmp(storedProducts[i].getProductName(), addProduct.getProductName()) == 0) {
-			if (storedProducts[i].getExpireDate() == addProduct.getExpireDate()) {
-				if (storedProducts[i].getPlacement().getProductNum() < onShelfCapacity) {
-					tempPlace.setProductNum(storedProducts[i].getPlacement().getProductNum() + 1);
-				} else if (storedProducts[i].getPlacement().getShelfNum() < shelfCapacity) {
-					tempPlace.setProductNum(storedProducts[i].getPlacement().getShelfNum() + 1);
-				}
-				else if (storedProducts[i].getPlacement().getSectionNum() < sectionCapacity) {
-					tempPlace.setProductNum(storedProducts[i].getPlacement().getSectionNum() + 1);
-				}
-			}
-
-		}
-	}
-	*/
-	addProduct.setPlaceinShop(tempPlace);
-	
 	storedProducts[size] = addProduct;
 	modifSize++;
 	size++;
@@ -165,12 +147,21 @@ void Storage::removeProduct() {
 	cout << "Please enter the quantity you want to remove: " << endl;
 	cin >> quantityRemoved;
 	size_t indExpDate = 0;
+	Date modificationDate;
+	cout << "Enter the date of the modification: " << endl;
+	cin >> modificationDate;
 
-//have to fix some stuff
+
 	for (size_t i = 0; i < size; i++) {
-		if (strcmp(storedProducts[i].getProductName(), removeProduct) == 0) {
+		
+		if (storedProducts[i].getProductName() == removeProduct) {
+			modifications[modifSize].setProduct(removeProduct);
+			modifications[modifSize].setQuantity(quantityRemoved);
+			modifications[modifSize].setModifDate(modificationDate);
+			modifications[modifSize].setInOrOut(0);
+			modifSize++;
 			for (size_t j = i + 1; j < size; j++) {
-				if (strcmp(storedProducts[i].getProductName(), storedProducts[j].getProductName()) == 0) {
+				if (storedProducts[i].getProductName() == storedProducts[j].getProductName()) {
 					sameProduct = true;
 					if (storedProducts[i].getExpireDate() > storedProducts[j].getExpireDate()) {
 						i = j;
@@ -181,7 +172,9 @@ void Storage::removeProduct() {
 			}
 			if (sameProduct) {
 				storedProducts[indExpDate].setQuantity(storedProducts[i].getQuantity() - quantityRemoved);
-				cout << storedProducts[indExpDate];
+				cout <<"Name: "<< storedProducts[indExpDate].getProductName() << endl;
+				cout <<"Placement: "<< storedProducts[indExpDate].getPlacement() << endl;
+				cout<<"Quantity: "<<storedProducts[indExpDate].getQuantity() << endl;;
 			}
 			else {
 				if (storedProducts[i].getQuantity() >= quantityRemoved) {
@@ -204,7 +197,7 @@ void Storage::removeProduct() {
 					}
 				}
 			}
-		}
+		} else cout<<"Invalid Input!";
 	}
 	
 	
@@ -236,7 +229,9 @@ void Storage::checkStock() {
 	cin >> end;
 
 	for (size_t i = 0; i < modifSize; i++) {
-		if (modifications[i].getModifDate() >= start && modifications[i].getModifDate() > end) {
+		
+		if (modifications[i].getModifDate() >= start && modifications[i].getModifDate() <= end) {
+			cout << "in";
 			cout << "Product: " << modifications[i].getProduct() << endl;
 			cout << "Modification date: " << modifications[i].getModifDate() << endl;
 			cout << "Change: ";
@@ -262,7 +257,6 @@ void Storage::cleanUp() {
 		}
 		
 	}
-	cout << get;
 	delete[]storedProducts;
 	storedProducts = newStore;
 	size = get;

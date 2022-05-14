@@ -2,39 +2,40 @@
 #define __PRODUCT_H
 #include "Placement.h"
 #include "Date.h"
+#include "mString.h"
 #include<iostream>
 using namespace std;
 
 class Product {
 private:
-	char* productName;
+	MyString productName;
 	Date expireDate;
 	Date entryDate;
-	char* madeBy;
+	MyString madeBy;
 	size_t quantity;
 	Placement placeInShop;
-	char* comment;
-	void copyFrom(const Product&);
-	void freeMemory();
+	MyString comment;
+	//void copyFrom(const Product&);
+	//void freeMemory();
 public:
 	Product();
-	Product(const Product&);
-	Product& operator=(const Product&);
-	~Product();
-	char* getProductName() const;
+	//Product(const Product&);
+	//Product& operator=(const Product&);
+	//~Product();
+	MyString getProductName() const;
 	Date getExpireDate() const;
 	Date getEntryDate() const;
-	char* getMadeBy() const;
+	MyString getMadeBy() const;
 	size_t getQuantity() const;
 	Placement getPlacement() const;
-	char* getComment() const;
-	void setProductName(const char*);
-	void setExpireDate(const Date);
-	void setEntryDate(const Date);
-	void setMadeBy(const char*);
-	void setQuantity(const size_t);
-	void setPlaceinShop(const Placement);
-	void setComment(const char*);
+	MyString getComment() const;
+	void setProductName(const MyString&);
+	void setExpireDate(const Date&);
+	void setEntryDate(const Date&);
+	void setMadeBy(const MyString&);
+	void setQuantity(const size_t&);
+	void setPlaceinShop(const Placement&);
+	void setComment(const MyString&);
 	friend ostream& operator<<(ostream&, const Product&);
 
 	void putInFile(ofstream&);
