@@ -15,13 +15,9 @@ private:
 	size_t quantity;
 	Placement placeInShop;
 	MyString comment;
-	//void copyFrom(const Product&);
-	//void freeMemory();
+
 public:
 	Product();
-	//Product(const Product&);
-	//Product& operator=(const Product&);
-	//~Product();
 	MyString getProductName() const;
 	Date getExpireDate() const;
 	Date getEntryDate() const;

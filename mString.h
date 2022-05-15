@@ -21,7 +21,6 @@ public:
 	size_t getSize() const;
 	void setString(const char*);
 
-	void concatenation(const MyString&);
 	bool operator==(const MyString&);
 
 	friend ostream& operator<<(ostream&, const MyString&);
@@ -29,8 +28,6 @@ public:
 
 	void putInFile(ofstream&);
 	void readFromFile(ifstream&);
-
-
 	
 
 };

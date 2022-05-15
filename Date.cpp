@@ -84,10 +84,17 @@ void Date::printDate() {
 }
 
 void Date::putInFile(ofstream& out) {
-	out << day<< " "<< month<< " "<< year << " ";
+	out << day << ","<< month << ","  << year << ",";
 }
 void Date::readFromFile(ifstream& in) {
-	in >> day >> month >> year;
+	in >> day;
+	in.get();
+	in >> month;
+	in.get();
+	in>>year;
+	in.get();
+
+	
 }
 
 ostream& operator<<(ostream& out, const Date& date) {

@@ -61,16 +61,20 @@ Storage::~Storage() {
 
 
 void Storage::putInFile(ofstream& out) {
+	out << size << ',';
 	for (size_t i = 0; i < size; i++) {
-		storedProducts[i].putInFile(out);
+	storedProducts[i].putInFile(out);
 	}
-
 }
 void Storage::readFromFile(ifstream& in) {
+	in >> size;
+	in.get();
+	capacity = size;
+	storedProducts = new Product[capacity];
 	for (size_t i = 0; i < size; i++) {
 		storedProducts[i].readFromFile(in);
+		in.get();
 	}
-
 }
 
 //functions for the interface
@@ -197,7 +201,7 @@ void Storage::removeProduct() {
 					}
 				}
 			}
-		} else cout<<"Invalid Input!";
+		} 
 	}
 	
 	
@@ -231,7 +235,6 @@ void Storage::checkStock() {
 	for (size_t i = 0; i < modifSize; i++) {
 		
 		if (modifications[i].getModifDate() >= start && modifications[i].getModifDate() <= end) {
-			cout << "in";
 			cout << "Product: " << modifications[i].getProduct() << endl;
 			cout << "Modification date: " << modifications[i].getModifDate() << endl;
 			cout << "Change: ";

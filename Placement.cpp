@@ -57,9 +57,15 @@ istream& operator>>(istream& in, Placement& place) {
 }
 
 void Placement::putInFile(ofstream& out) {
-	out << sectionNum << " " << shelfNum << " " << productNum << " ";
+	out << sectionNum << "," << shelfNum << "," << productNum << ",";
 }
 void Placement::readFromFile(ifstream& in) {
-	in >> sectionNum >> shelfNum >> productNum;
+
+	in >> sectionNum;
+	in.get();
+	in >> shelfNum;
+	in.get();
+	in >> productNum;
+	in.get();
 	
 }

@@ -106,51 +106,42 @@ ostream& operator<<(ostream& out, const Product& product) {
 
 void Product::putInFile(ofstream& out) {
 
-
 	productName.putInFile(out);
-
 	expireDate.putInFile(out);
 	entryDate.putInFile(out);
-
 	madeBy.putInFile(out);
 
 	out << quantity;
-	out << " ";
+	out << ",";
 
 	placeInShop.putInFile(out);
-
 	comment.putInFile(out);
-
+	
+	out << '\n';
 	
 }
-//gotta fix the read
+
 void Product::readFromFile(ifstream& in) {
 	Product temp;
-
-//	size_t readSize;
-//	in.read((char*)&readSize, sizeof(size_t));
-//	in.read((char*)&temp.productName, readSize);
 
 	temp.productName.readFromFile(in);
 	temp.expireDate.readFromFile(in);
 	temp.entryDate.readFromFile(in);
 	temp.madeBy.readFromFile(in);
+
 	in >> quantity;
+	in.get();
+
 	temp.placeInShop.readFromFile(in);
 	temp.comment.readFromFile(in);
-
 
 
 	setProductName(temp.getProductName());
 	setExpireDate(temp.expireDate);
 	setEntryDate(temp.entryDate);
 	setMadeBy(temp.getMadeBy());
-
-	quantity = temp.quantity;
-	
 	setPlaceinShop(temp.placeInShop);
 	setComment(temp.getComment());
-
 
 }
 

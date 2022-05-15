@@ -32,12 +32,14 @@ int main() {
 			cin.getline(fileName, 128);
 			ofstream file(fileName);
 			test.putInFile(file);
+			file.close();
 		}
 		else if (strcmp(input, "ReadFromFile") == 0) {
 			cin.ignore();
 			cin.getline(fileName, 128);
 			ifstream file(fileName);
 			test.readFromFile(file);
+			file.close();
 		}
 		else if (strcmp(input, "Close") == 0) {
 			timeToClose = true;
@@ -45,5 +47,6 @@ int main() {
 		}
 		
 	 } while (!timeToClose);
-
+		
+	
 }

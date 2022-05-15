@@ -47,16 +47,6 @@ void MyString::setString(const char* other) {
 	strcpy_s(string,size, other);
 }
 
-void MyString::concatenation(const MyString& other) {
-	size_t newSize = this->size + other.size;
-	char* newString = new char[newSize + 1];
-	strcpy_s(newString,newSize+1, string);
-	strcat_s(newString, newSize+1, other.string);
-	delete[]string;
-	string = newString;
-	size = newSize;
-
-}
 
 bool MyString::operator==(const MyString& other) {
 	return strcmp(string, other.string) == 0;
@@ -78,12 +68,17 @@ istream& operator>>(istream& in, MyString& read) {
 }
 
 void MyString::putInFile(ofstream& out) {
-	out << size;
-	out << " ";
+	out << strlen(string);
+	out << ",";
 	out << string;
+	out << ",";
 }
 void MyString::readFromFile(ifstream& in) {
 	size_t readSize;
 	in >> readSize;
-	in.read(string, readSize);
+	delete[] string;
+	string = new char[readSize + 1];
+	char c = in.get();
+	in.getline(string, readSize + 1, ',');
+
 }

@@ -32,7 +32,5 @@ public:
 	friend istream& operator>>(istream&, Date&);
 
 
-
-
 };
 #endif
